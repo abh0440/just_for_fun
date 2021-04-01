@@ -1,6 +1,6 @@
 # just_for_fun
 
-A new Flutter project.
+A new project to make a series of short games.
 
 ## Getting Started
 
