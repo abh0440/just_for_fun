@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:just_for_fun/screens/roulette_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -17,12 +16,6 @@ class HomeScreenState extends State<HomeScreen> {
   //to store player name
   List<String> players = [];
 
-  //for random
-  final _random = new Random();
-
-  //for popup
-  List<String> popupItem = ["Free Lunch", "Lunch Split"];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,59 +27,12 @@ class HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton.extended(
         label: Text("Press Me"),
         onPressed: () {
-          Future.delayed(Duration(milliseconds: 5000), () {
-            Get.back();
-            var winner = players[_random.nextInt(players.length)];
-            Get.dialog(
-              Dialog(
-                insetPadding: EdgeInsets.zero,
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.all(16.0),
-                  height: 150.0,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Congratulations",
-                        style: TextStyle(
-                            color: Colors.green,
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        winner.toUpperCase(),
-                        style: TextStyle(
-                            fontSize: 32.0, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "You win a free lunch!",
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14.0,
-                            fontStyle: FontStyle.italic),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          });
-          Get.dialog(
-            Dialog(
-              insetPadding: EdgeInsets.zero,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                child: Image.asset("assets/casino-roulette.gif"),
-              ),
-            ),
-            barrierDismissible: false,
-          );
+          Get.to(() => RouletteScreen(players: players));
         },
       ),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _buildUserNames(),
             _buildPlayerNameDisplay(),
@@ -101,24 +47,26 @@ class HomeScreenState extends State<HomeScreen> {
       margin: EdgeInsets.all(16.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Expanded(
             child: TextField(
               autocorrect: false,
               controller: _playerNameController,
-              decoration: InputDecoration(hintText: "Enter Player Name"),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                players.add(_playerNameController.text.trim());
-                _playerNameController.clear();
-              });
-            },
-            child: Padding(
-              padding: EdgeInsets.only(left: 32.0),
-              child: Icon(Icons.add),
+              decoration: InputDecoration(
+                hintText: "Enter Player Name",
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    if (_playerNameController.text.isNotEmpty) {
+                      setState(() {
+                        players.add(_playerNameController.text.trim());
+                        _playerNameController.clear();
+                      });
+                    }
+                  },
+                ),
+              ),
             ),
           ),
         ],
